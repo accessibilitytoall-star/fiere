@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indice fiere — AccessibilityToAll</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Fiere A2A"><meta name="theme-color" content="#0C6CD3"><link rel="apple-touch-icon" href="icona-fare.png">
+<style>
+  :root{ --blu:#0C6CD3; --arancio:#EF8216; --grigio:#95A5A6; --bg:#ffffff; --testo:#1a1a1a; --card:#f4f8fd; }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--testo);font-family:"Museum 700","Trebuchet MS",Verdana,sans-serif;line-height:1.6;margin:0;padding:0 16px 48px}
+  main{max-width:820px;margin:0 auto}
+  a{color:var(--blu)} a:focus{outline:3px solid var(--arancio);outline-offset:2px}
+  .skip-link{position:absolute;left:-999px} .skip-link:focus{left:8px;top:8px;background:#fff;padding:8px;z-index:10}
+  h1{color:var(--blu);font-size:1.8rem;margin:.6em 0 .1em}
+  p.meta{color:#555}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:14px}
+  .card{background:var(--card);border:1px solid #cfe0f5;border-radius:12px;padding:16px}
+  .card h2{color:var(--blu);font-size:1.15rem;margin:.1em 0 .3em;border:none}
+  footer{margin-top:40px;color:#666;font-size:.9rem;border-top:1px solid #ddd;padding-top:12px}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenuto">Salta al contenuto</a>
+<main id="contenuto">
+  <h1>Indice fiere</h1>
+  <p class="meta">Tutte le fiere analizzate con la skill <code>analisi-fiera</code>. Entra in una fiera per vedere espositori, schede e report.</p>
+  <div class="grid">
+    <div class="card">
+      <h2><a href="wmf-2026/index.html">WMF 2026 — We Make Future</a></h2>
+      <p>BolognaFiere · 24–26 giugno 2026 · soggetto: AccessibilityToAll</p>
+    </div>
+  </div>
+  <footer><p>AccessibilityToAll SRL · indice generato dalla skill analisi-fiera.</p></footer>
+</main>
+</body>
+</html>

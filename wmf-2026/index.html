@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analisi fiera — AccessibilityToAll</title>
+<link rel="manifest" href="../manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Fiere A2A"><meta name="theme-color" content="#0C6CD3"><link rel="apple-touch-icon" href="../icona-fare.png">
+<style>
+  :root{ --blu:#0C6CD3; --arancio:#EF8216; --grigio:#95A5A6; --bg:#ffffff; --testo:#1a1a1a; --card:#f4f8fd; }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--testo);font-family:"Museum 700","Trebuchet MS",Verdana,sans-serif;line-height:1.6;margin:0;padding:0 16px 48px}
+  main{max-width:920px;margin:0 auto}
+  a{color:var(--blu)} a:focus,button:focus,input:focus{outline:3px solid var(--arancio);outline-offset:2px}
+  .skip-link{position:absolute;left:-999px} .skip-link:focus{left:8px;top:8px;background:#fff;padding:8px;z-index:10}
+  h1{color:var(--blu);font-size:1.8rem;margin:.6em 0 .1em}
+  h2{color:var(--blu);font-size:1.3rem;border-bottom:3px solid var(--arancio);padding-bottom:4px;margin-top:1.6em}
+  h3{color:var(--testo);font-size:1.05rem;margin:1em 0 .2em}
+  .meta{color:#555;margin:.2em 0 1em}
+  .nav-ed{display:flex;gap:10px;align-items:center;margin:6px 0}
+  .nav-ed a{font-size:.95rem}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+  input[type=search]{flex:1;min-width:200px;padding:10px 12px;border:2px solid var(--grigio);border-radius:8px;font-size:1rem}
+  .pill{display:inline-block;background:var(--card);border:1px solid #cfe0f5;color:#0a4f9c;border-radius:999px;padding:2px 10px;font-size:.85rem;margin:2px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:8px}
+  .card{background:var(--card);border:1px solid #cfe0f5;border-radius:12px;padding:14px;text-align:left}
+  .card h3{margin:.1em 0}
+  button.link{background:none;border:none;color:var(--blu);text-decoration:underline;cursor:pointer;font:inherit;padding:0}
+  .btn{display:inline-block;background:var(--blu);color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:1rem;cursor:pointer;text-decoration:none}
+  .tabs{display:flex;gap:6px;margin:14px 0 0;border-bottom:2px solid var(--grigio)}
+  .tab{background:#eef3fa;border:1px solid #cfe0f5;border-bottom:none;border-radius:8px 8px 0 0;padding:8px 14px;cursor:pointer;font:inherit}
+  .tab[aria-selected=true]{background:var(--blu);color:#fff}
+  dl{margin:0} dt{font-weight:bold;color:#0a4f9c;margin-top:.6em} dd{margin:0 0 .2em}
+  .group{background:#fff;border:1px solid #e3eefb;border-radius:10px;padding:10px 14px;margin:10px 0}
+  .count{display:inline-block;background:#fff4e8;border:1px solid var(--arancio);color:#b35a00;border-radius:999px;padding:2px 12px;font-size:.85rem;margin:8px 0}
+  .lente{border:2px solid var(--arancio);border-radius:12px;padding:12px 16px;margin:14px 0;background:#fffaf4}
+  .lente h3{color:#b35a00;margin:.1em 0 .4em}
+  .lente .riga{margin:.3em 0} .lente .riga b{color:#0a4f9c}
+  .maxi{display:inline-flex;flex-direction:column;align-items:center;gap:6px;background:none;border:none;cursor:pointer;font:inherit;margin:14px 0}
+  .maxi img{width:4cm;height:4cm;border-radius:16px;border:3px solid var(--arancio)}
+  .maxi span{color:var(--arancio);font-weight:bold}
+  .rep-col{background:var(--card);border:1px solid #cfe0f5;border-radius:12px;padding:14px;margin:10px 0;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+  .rep-col .txt{flex:1}
+  .play{display:inline-flex;align-items:center;gap:8px;background:var(--arancio);color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:.95rem;cursor:pointer;white-space:nowrap}
+  .hidden{display:none}
+  footer{margin-top:40px;color:#666;font-size:.9rem;border-top:1px solid #ddd;padding-top:12px}
+  @media print{ body{background:#fff} .no-print{display:none} }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenuto">Salta al contenuto</a>
+<main id="contenuto">
+  <p class="no-print"><a href="../index.html">← Indice fiere</a></p>
+  <div class="nav-ed no-print" id="navEd"></div>
+  <h1 id="titoloFiera">Fiera</h1>
+  <p class="meta" id="metaFiera"></p>
+  <div id="distretti"></div>
+
+  <button class="maxi no-print" id="btnReport" aria-label="Apri il report: cosa creare dopo questa fiera">
+    <img id="iconaFare" src="icona-fare.png" alt="Ingranaggi azionati da una lampadina luminosa: crea i prodotti dalla fiera">
+    <span>Cosa creo dopo?</span>
+  </button>
+
+  <section id="vistaLista">
+    <h2>Espositori</h2>
+    <div class="bar no-print">
+      <label for="cerca" class="pill">Cerca in questa fiera</label>
+      <input type="search" id="cerca" placeholder="Nome, categoria…" aria-label="Cerca tra gli espositori di questa fiera">
+    </div>
+    <div class="grid" id="listaEspositori"></div>
+  </section>
+
+  <section id="vistaEspositore" class="hidden" aria-live="polite">
+    <p class="no-print"><button class="link" id="tornaLista">← Torna agli espositori</button></p>
+    <h2 id="nomeEspositore">Espositore</h2>
+    <div class="tabs" role="tablist" aria-label="Schede espositore" id="tablist">
+      <button class="tab" role="tab" id="tabA" aria-selected="true" tabindex="0" aria-controls="panelA">Espositore</button>
+      <button class="tab" role="tab" id="tabB" aria-selected="false" tabindex="-1" aria-controls="panelB">Servizi</button>
+    </div>
+    <div id="panelA" role="tabpanel" aria-labelledby="tabA"></div>
+    <div id="panelB" role="tabpanel" aria-labelledby="tabB" class="hidden"></div>
+  </section>
+
+  <section id="vistaReport" class="hidden" aria-live="polite">
+    <p class="no-print"><button class="link" id="tornaLista2">← Torna agli espositori</button></p>
+    <h2>Report — cosa creare dopo questa fiera</h2>
+    <h3>Da integrare (si aggancia a ciò che hai già)</h3>
+    <div id="repIntegrare"></div>
+    <h3>Da creare da zero</h3>
+    <div id="repCreare"></div>
+    <div class="rep-col"><div class="txt"><strong>Raccomandazione:</strong> <span id="repReco"></span></div></div>
+  </section>
+
+  <footer>
+    <p id="fonti"></p>
+    <p>AccessibilityToAll SRL · skill <code>analisi-fiera</code>. Il blocco DATI qui sotto è sostituito dalla skill a ogni fiera.</p>
+  </footer>
+</main>
+
+<script>
+/* ====== DATI (la skill rigenera questo blocco a ogni fiera) ====== */
+var FIERA = {
+  nome:"WMF 2026 — We Make Future",
+  meta:"BolognaFiere · 24–26 giugno 2026 · 800+ espositori · 14 distretti · 70.000 mq",
+  distretti:["AI District","Manufacturing & Robotics","Martech","Fintech & Digital Asset","Digital Agency","E-commerce","Startup","Health","Automotive & Mobility","Gaming & Publishing","Tech Transfer","Creator","Padiglioni internazionali"],
+  prev:null,            /* es. {label:"WMF 2025", href:"../🔎 - WMF 2025/🔎 - WMF 2025.html"} */
+  next:null,            /* es. {label:"WMF 2027", href:"../🔎 - WMF 2027/🔎 - WMF 2027.html"} */
+  fonti:"Fonti: wemakefuture.it/next/espositori · startup-news.it · wemakefuture.it/accessibility · accessiway.com"
+};
+var ESPOSITORI = [
+  { id:"accessiway", nome:"AccessiWay", categoria:"Accessibilità digitale (competitor diretto)",
+    A:[
+      {gruppo:"Identità", voci:[["Fondazione","2021, Torino"],["Gruppo","parte di team.blue (hub compliance con Iubenda)"],["Mercato","Italia + internazionale"]]},
+      {gruppo:"Posizionamento", voci:[["Promessa","accessibilità digitale gestita in continuo, non a progetto"],["Segmento","brand/enterprise (1.500+ clienti)"],["Concorrenti","overlay vendor, agenzie"]]},
+      {gruppo:"Tech & certificazioni", voci:[["Tecnologia","piattaforma audit + automazioni AI + accessWidget (14 lingue)"],["Certificazioni","esperti certificati IAAP"]]},
+      {gruppo:"Segnali di fiera", voci:[["Presenza","stand team.blue"],["Messaggio","compliance EAA gestita"]]}
+    ],
+    lente:{
+      forza:"Scala, tecnologia (piattaforma + widget + AI), certificazione IAAP, 1.500+ brand.",
+      forzaNelDebole:"Sono percepiti come fornitore 'tech/standard': chi vuole un volto umano resta scoperto.",
+      debole:"Servizio impersonale; puntano molto sul widget/overlay, criticato dalla community.",
+      conclusione:"A2A occupa lo spazio umano e anti-overlay: rimedio vero + esperienza vissuta + video/PDF/LIS."
+    },
+    servizi:["aw-audit","aw-widget","aw-platform"] },
+  { id:"esempio-martech", nome:"Esempio Martech Srl", categoria:"Martech",
+    A:[
+      {gruppo:"Identità", voci:[["Fondazione","dato non disponibile"],["Mercato","Italia"]]},
+      {gruppo:"Posizionamento", voci:[["Promessa","automazione del marketing per PMI"]]}
+    ],
+    lente:{
+      forza:"Automazione marketing pronta per PMI.",
+      forzaNelDebole:"Prodotto generico: nessuna verticalità sull'accessibilità.",
+      debole:"Dato non disponibile su prezzi e adozione.",
+      conclusione:"A2A può offrire 'martech accessibile by design' partendo dalle skill di contenuto."
+    },
+    servizi:["mt-suite"] }
+];
+var SERVIZI = [
+  { id:"aw-audit", espositore:"accessiway", nome:"Audit di accessibilità",
+    B:[{gruppo:"Cosa è", voci:[["Tipo","servizio + audit certificato"],["Problema","conformità WCAG/EN 301 549"]]}],
+    lente:{forza:"Report certificato pacchettizzato.",forzaNelDebole:"Standard: poco calore, poco racconto.",debole:"Una-tantum, poco ricorrente.",conclusione:"A2A: audit con esperienza vissuta + affiancamento."}},
+  { id:"aw-widget", espositore:"accessiway", nome:"accessWidget (overlay)",
+    B:[{gruppo:"Cosa è", voci:[["Tipo","widget/overlay"],["Promessa","accessibilità con una riga di codice"]]}],
+    lente:{forza:"Installazione immediata.",forzaNelDebole:"Vende semplicità che il pubblico vuole.",debole:"Gli overlay sono criticati: non risolvono davvero.",conclusione:"A2A: posizionamento anti-overlay, rimedio reale."}},
+  { id:"aw-platform", espositore:"accessiway", nome:"Piattaforma di monitoraggio",
+    B:[{gruppo:"Cosa è", voci:[["Tipo","SaaS monitoraggio continuo"]]}],
+    lente:{forza:"Monitoraggio continuo = ricavo ricorrente.",forzaNelDebole:"Abitua il cliente all'abbonamento.",debole:"Richiede struttura tech enterprise.",conclusione:"A2A: mini-tool di pre-audit/punteggio come amo del funnel."}},
+  { id:"mt-suite", espositore:"esempio-martech", nome:"Suite di marketing automation",
+    B:[{gruppo:"Cosa è", voci:[["Tipo","SaaS"]]}],
+    lente:{forza:"Tutto-in-uno.",forzaNelDebole:"Generico, adattabile.",debole:"Nessuna accessibilità.",conclusione:"A2A: tool 'competitor + piano editoriale' dalle skill esistenti."}}
+];
+var REPORT = {
+  integrare:[
+    {nome:"Marketplace/plugin di skill AI", come:"Impacchetta COPIA ZERO + agente Allegra + skill. Battere i competitor: vendi un ecosistema, non un solo tool."},
+    {nome:"Generatore Dichiarazione EAA", come:"Già avviato in workspace: chiudilo come web-app. Meglio dei competitor: adempimento di legge, semplice e on-brand."}
+  ],
+  creare:[
+    {nome:"Tool martech (competitor + piano editoriale)", come:"Da ricerca-settimanale + ped-settimanale. Battere i competitor: accessibile by design e firmato dalla tua storia."}
+  ],
+  raccomandazione:"Parti dal marketplace di skill (asset più maturo) o dal generatore EAA (più vicino al traguardo)."
+};
+var TOT_A=50, TOT_B=50; /* riferimento dei 50 punti per il contatore di completezza */
+/* ====== FINE DATI ====== */
+
+function el(id){return document.getElementById(id)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function show(id){["vistaLista","vistaEspositore","vistaReport"].forEach(function(v){el(v).classList.add("hidden")});el(id).classList.remove("hidden");window.scrollTo(0,0)}
+function compilati(arr){var n=0;arr.forEach(function(g){g.voci.forEach(function(v){if(v[1]&&v[1]!=="dato non disponibile")n++})});return n}
+function lenteHTML(l){if(!l)return"";return '<div class="lente"><h3>Lettura strategica</h3>'+
+  '<p class="riga"><b>Punti di forza:</b> '+esc(l.forza||"—")+'</p>'+
+  '<p class="riga"><b>Forza nascosta nel debole:</b> '+esc(l.forzaNelDebole||"—")+'</p>'+
+  '<p class="riga"><b>Punti di debolezza:</b> '+esc(l.debole||"—")+'</p>'+
+  '<p class="riga"><b>Conclusione → forza per A2A:</b> '+esc(l.conclusione||"—")+'</p></div>'}
+
+function renderHead(){
+  el("titoloFiera").textContent=FIERA.nome;
+  el("metaFiera").textContent=FIERA.meta;
+  el("distretti").innerHTML=FIERA.distretti.map(function(d){return '<span class="pill">'+esc(d)+'</span>'}).join("");
+  el("fonti").textContent=FIERA.fonti;
+  var nav="";
+  if(FIERA.prev)nav+='<a href="'+esc(FIERA.prev.href)+'">← '+esc(FIERA.prev.label)+'</a>';
+  if(FIERA.next)nav+='<a href="'+esc(FIERA.next.href)+'">'+esc(FIERA.next.label)+' →</a>';
+  el("navEd").innerHTML=nav;
+}
+function renderLista(filtro){
+  filtro=(filtro||"").toLowerCase();
+  var html=ESPOSITORI.filter(function(e){return (e.nome+" "+e.categoria).toLowerCase().indexOf(filtro)>-1})
+    .map(function(e){return '<div class="card"><h3>'+esc(e.nome)+'</h3><p class="pill">'+esc(e.categoria)+'</p><p><button class="link" data-esp="'+e.id+'">Apri scheda →</button></p></div>'}).join("");
+  el("listaEspositori").innerHTML=html||"<p>Nessun espositore trovato in questa fiera.</p>";
+  Array.prototype.forEach.call(document.querySelectorAll("[data-esp]"),function(b){b.onclick=function(){openEsp(b.getAttribute("data-esp"))}});
+}
+function blocks(arr){return arr.map(function(g){return '<div class="group"><h3>'+esc(g.gruppo)+'</h3><dl>'+g.voci.map(function(v){return '<dt>'+esc(v[0])+'</dt><dd>'+esc(v[1])+'</dd>'}).join("")+'</dl></div>'}).join("")}
+function openEsp(id){
+  var e=ESPOSITORI.find(function(x){return x.id===id});if(!e)return;
+  el("nomeEspositore").textContent=e.nome;
+  el("panelA").innerHTML='<p class="count">'+compilati(e.A)+'/'+TOT_A+' punti compilati</p>'+blocks(e.A)+lenteHTML(e.lente);
+  var servs=SERVIZI.filter(function(s){return s.espositore===id});
+  el("panelB").innerHTML=servs.length?servs.map(function(s){return '<h3>'+esc(s.nome)+'</h3><p class="count">'+compilati(s.B)+'/'+TOT_B+' punti compilati</p>'+blocks(s.B)+lenteHTML(s.lente)}).join(""):"<p>Nessun servizio mappato.</p>";
+  selTab("A");show("vistaEspositore");el("tabA").focus();
+}
+function selTab(which){
+  var a=which==="A";
+  el("tabA").setAttribute("aria-selected",a);el("tabB").setAttribute("aria-selected",!a);
+  el("tabA").tabIndex=a?0:-1;el("tabB").tabIndex=a?-1:0;
+  el("panelA").classList.toggle("hidden",!a);el("panelB").classList.toggle("hidden",a);
+}
+function renderReport(){
+  function col(list){return list.map(function(r){return '<div class="rep-col"><div class="txt"><strong>'+esc(r.nome)+'</strong><br>'+esc(r.come)+'</div><button class="play no-print" data-prod="'+esc(r.nome)+'">▶ Checklist</button></div>'}).join("")}
+  el("repIntegrare").innerHTML=col(REPORT.integrare);
+  el("repCreare").innerHTML=col(REPORT.creare);
+  el("repReco").textContent=REPORT.raccomandazione;
+  Array.prototype.forEach.call(document.querySelectorAll("[data-prod]"),function(b){b.onclick=function(){avvia(b.getAttribute("data-prod"))}});
+}
+function avvia(prodotto){
+  var prompt="Usa la skill crea-checklist per creare la checklist di produzione di: "+prodotto+" (nato dall'analisi della fiera "+FIERA.nome+").";
+  if(typeof sendPrompt==="function"){sendPrompt(prompt);}
+  else if(window.cowork&&window.cowork.sendPrompt){window.cowork.sendPrompt(prompt);}
+  else{ try{navigator.clipboard.writeText(prompt);}catch(e){} window.open("https://claude.ai/new?q="+encodeURIComponent(prompt),"_blank"); }
+}
+
+renderHead();renderLista("");renderReport();
+el("cerca").addEventListener("input",function(){renderLista(this.value)});
+el("btnReport").onclick=function(){show("vistaReport")};
+el("tornaLista").onclick=function(){show("vistaLista")};
+el("tornaLista2").onclick=function(){show("vistaLista")};
+el("tabA").onclick=function(){selTab("A")};
+el("tabB").onclick=function(){selTab("B")};
+el("tablist").addEventListener("keydown",function(ev){
+  if(ev.key!=="ArrowLeft"&&ev.key!=="ArrowRight")return;
+  var cur=el("tabA").getAttribute("aria-selected")==="true"?"A":"B";
+  var nxt=cur==="A"?"B":"A";selTab(nxt);el("tab"+nxt).focus();ev.preventDefault();
+});
+</script>
+</body>
+</html>

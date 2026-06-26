@@ -1,0 +1,12 @@
+{
+  "name": "Fiere · AccessibilityToAll",
+  "short_name": "Fiere A2A",
+  "description": "Analisi fiere: espositori, schede e report.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0C6CD3",
+  "lang": "it",
+  "icons": [ { "src": "./icona-fare.png", "sizes": "any", "type": "image/png", "purpose": "any" } ]
+}
